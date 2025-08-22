@@ -1,35 +1,156 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="./assets/img/4geeks.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello Rigo with Vanilla.js</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Cartas</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #388e3c; /* Color de fondo de mesa de juego */
+            font-family: sans-serif;
+            color: #333;
+        }
 
-    <!-- Fontawesome is our recomended library for icons -->
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
-      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
-      crossorigin="anonymous"
-    />
-  </head>
-  <body>
-    <!-- Write your HTML code here, you can delete everything withing the body tags -->
-    <div class="container-fluid text-center">
-      <h1 class="mt-5">Hello Rigo!</h1>
-      <img src="./assets/img/rigo-baby.jpg" />
-      <p class="alert alert-warning mt-4">
-        If this text is <b>not</b> centered and <b>yellow</b>, you probably have
-        an error
-      </p>
-      <div class="fixed-bottom p-4">
-        Made with ❤️ by
-        <a href="https://www.4geeksacademy.com">4Geeks Academy</a>
-      </div>
+        .card-container {
+            width: 300px;
+            height: 450px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            margin-bottom: 20px; /* Espacio entre la carta y el botón */
+        }
+
+        .card-value {
+            font-size: 80px;
+            font-weight: bold;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .card-top-left, .card-bottom-right {
+            font-size: 50px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .card-top-left {
+            align-self: flex-start;
+        }
+
+        .card-bottom-right {
+            align-self: flex-end;
+            transform: rotate(180deg);
+        }
+
+        .suit {
+            font-size: 60px;
+            line-height: 1;
+        }
+        
+        /* Clases para los palos */
+        .heart, .diamond {
+            color: red;
+        }
+
+        .spade, .club {
+            color: black;
+        }
+
+        .change-card-btn {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #fdd835;
+            color: #333;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
+        }
+
+        .change-card-btn:hover {
+            background-color: #fbc02d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container" id="cardContainer">
+        <div class="card-top-left">
+            <span id="top-value"></span>
+            <span id="top-suit" class="suit"></span>
+        </div>
+        <div class="card-value">
+            <span id="main-value"></span>
+        </div>
+        <div class="card-bottom-right">
+            <span id="bottom-value"></span>
+            <span id="bottom-suit" class="suit"></span>
+        </div>
     </div>
 
-    <!-- Do not delete this script tag, this is what connects your HTML with the Javascript code -->
-    <script type="module" src="/app.js"></script>
-  </body>
+    <button class="change-card-btn" onclick="generateCard()">Cambiar Carta</button>
+
+    <script>
+        function generateCard() {
+            // Arrays con los posibles valores y palos
+            const values = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+            const suits = ['heart', 'diamond', 'spade', 'club'];
+            const suitSymbols = {
+                'heart': '♥',
+                'diamond': '♦',
+                'spade': '♠',
+                'club': '♣'
+            };
+
+            // Generar números aleatorios
+            const randomValueIndex = Math.floor(Math.random() * values.length);
+            const randomSuitIndex = Math.floor(Math.random() * suits.length);
+
+            const randomValue = values[randomValueIndex];
+            const randomSuit = suits[randomSuitIndex];
+            const randomSuitSymbol = suitSymbols[randomSuit];
+
+            // Obtener los elementos HTML
+            const cardContainer = document.getElementById('cardContainer');
+            const topValue = document.getElementById('top-value');
+            const topSuit = document.getElementById('top-suit');
+            const mainValue = document.getElementById('main-value');
+            const bottomValue = document.getElementById('bottom-value');
+            const bottomSuit = document.getElementById('bottom-suit');
+
+            // Limpiar las clases de palo anteriores para evitar que se acumulen
+            cardContainer.classList.remove('heart', 'diamond', 'spade', 'club');
+            
+            // Asignar la nueva clase CSS del palo
+            cardContainer.classList.add(randomSuit);
+
+            // Rellenar el contenido de la carta
+            topValue.textContent = randomValue;
+            topSuit.textContent = randomSuitSymbol;
+            mainValue.textContent = randomValue;
+            bottomValue.textContent = randomValue;
+            bottomSuit.textContent = randomSuitSymbol;
+        }
+
+        // Llamar a la función para generar una carta al cargar la página
+        window.onload = generateCard;
+    </script>
+
+</body>
 </html>
